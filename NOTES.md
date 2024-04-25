@@ -237,8 +237,6 @@ Install the Requests library and create a Pipfile for you in your project’s di
 Log in to your GitHub account and create a new repository Then: 
 - Initialize Git:
 `git init`
-- Finally link Local Repository to GitHub (`YOUR_REPO_URL`):
-`git remote add origin YOUR_REPO_URL`
 - Add and Commit Files:
 `git add .`
 `git commit -m "Initial commit"`
