@@ -1,58 +1,43 @@
 import json
 import pandas as pd
-from pyodide.ffi import to_js
-from IPython.display import JSON, HTML
-from js import Object, fetch
+import requests
 from io import StringIO
 
-async def query(query_string, store = "L", set_na = False):
+async def query(query_string, store="L", set_na=False):
+    # Define endpoints
+    endpoints = {"F": 'https://fedlex.data.admin.ch/sparqlendpoint',
+                 "G": 'https://geo.ld.admin.ch/query',
+                 "L": 'https://ld.admin.ch/query'}
     
-    # three Swiss triplestores
-    if store == "F":
-        address = 'https://fedlex.data.admin.ch/sparqlendpoint'
-    elif store == "G":
-        address = 'https://geo.ld.admin.ch/query'
-    elif store == "L":
-        address = 'https://ld.admin.ch/query'
-    else:
-        address = store
-    
-    # try the Post request with help of JS fetch
-    # the creation of the request header is a little bit complicated because it needs to be a 
-    # JavaScript JSON that is made within a Python source code
+    address = endpoints.get(store, store)
+
+    # Try the POST request
     try:
-        resp = await fetch(address,
-          method="POST",
-          body="query=" + query_string.replace("+", "%2B").replace("&", "%26"),
-          credentials="same-origin",
-          headers=Object.fromEntries(to_js({"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8", 
-                                            "Accept": "text/csv" })),
-        )
-    except:
-        raise RuntimeError("fetch failed")
-    
-    
+        resp = requests.post(address,
+                             data={"query": query_string},
+                             headers={"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                                      "Accept": "text/csv"})
+        resp.raise_for_status()  # Raise exception for non-200 status codes
+    except Exception as e:
+        raise RuntimeError(f"Fetch failed: {str(e)}")
+
     if resp.ok:
-        res = await resp.text()
-        # ld.admin.ch throws errors starting with '{"message":'
+        res = resp.text
         if '{"message":' in res:
             error = json.loads(res)
             raise RuntimeError("SPARQL query malformed: " + error["message"])
-        # geo.ld.admin.ch throws errors starting with 'Parse error:'
         elif 'Parse error:' in res:
             raise RuntimeError("SPARQL query malformed: " + res)
         else:
-            # if everything works out, create a pandas dataframe from the csv result
-            df = pd.read_csv(StringIO(res), na_filter = set_na)
+            df = pd.read_csv(StringIO(res), na_filter=set_na)
             return df
     else:
-        # fedlex.data.admin.ch throws error with response status 400
-        if resp.status == 400:
+        if resp.status_code == 400:
             raise RuntimeError("Response status 400: Possible malformed SPARQL query. No syntactic advice available.")
         else:
-            raise RuntimeError("Response status " + str(resp.status))
-            
-            
+            raise RuntimeError(f"Response status {resp.status_code}")
+
+
 def display_result(df):
-    df = HTML(df.to_html(render_links=True, escape=False))
-    display(df)
+    html_content = df.to_html(render_links=True, escape=False)
+    print(html_content)

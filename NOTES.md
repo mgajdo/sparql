@@ -2,15 +2,7 @@
 
 [## Fedlex Linked Data Tutorial](https://swissfederalarchives.github.io/LD-Tutorials/lab/)
 
-## Python setup
-Nach der Python Installation muss `pandas` Modul importiert werden. 
 
-```
-import pandas as pd
-from ext.sparql import query, display_result
-```
-
-[Documentation](https://pandas.pydata.org/docs/index.html)
 
 ## Fedlex URIs
 
@@ -94,31 +86,16 @@ Triples folgen der grammatikalischen Struktur **Subjekt -> Prädikat -> Objekt**
 Das Ziel unserer ersten Query in der Bundesverfassung ist es Triples suchen, in denen die Bundesverfassung als **Subjekt** erscheint. Alle Triples müssen dieses Muster erfüllen:
 
 ```
-df = await query("""
-
 SELECT DISTINCT ?Prädikat ?Objekt WHERE {
     
     <https://fedlex.data.admin.ch/eli/cc/1999/404> ?Prädikat ?Objekt .
 } 
-
-""", "F")
-
-display_result(df)
 ```
 
 Die Aussage beginnt mit der `URI der Bundesverfassung` als Subjekt. Wir setzen das `Prädikat` und `Objekt` als Variablen ein (`?`). `SELECT` beschreibt welche Variablen zurückgegeben werden sollen. Mit `DISTINCT` werden doppelte Ergebnisse aussortiert. Die Aussage endet mit einem Punkt und die Abfrage gibt alle Elemente zurück, die das definierte Pattern erfüllen. Eine ausführliche Anleitung zum Pattern Matching ist [hier](https://programminghistorian.org/en/lessons/retired/graph-databases-and-SPARQL#rdf-in-brief) zu finden. 
 
 
-Im Web-Interface benötigen wir nur den Teil zwischen den `"""` (der `query_string`). Das Ergebnis ist eine Tabelle mit unseren beiden Variabeln:
-
-```
-SELECT DISTINCT ?Prädikat ?Objekt WHERE {
-    
-    <https://fedlex.data.admin.ch/eli/cc/1999/404> ?Prädikat ?Objekt .
-} 
-```
-
-Das Ergebnis ist eine Tabelle mit allen Prädikaten und den entsprechenden Objekten, die in allen abgespeicherten Triples mit der Bundesverfassung als Subjekt vorkommen:
+Das Ergebnis ist eine Tabelle mit allen Prädikaten und den entsprechenden Objekten (unsere Variabeln), die in allen abgespeicherten Triples mit der Bundesverfassung als Subjekt vorkommen:
 
 [**Hier Klicken für Darstellung**](https://fedlex.data.admin.ch/sparqlendpoint?default-graph-uri=&query=SELECT+DISTINCT+%3FPr%C3%A4dikat+%3FObjekt+WHERE+%7B%0D%0A++++%0D%0A++++%3Chttps%3A%2F%2Ffedlex.data.admin.ch%2Feli%2Fcc%2F1999%2F404%3E+%3FPr%C3%A4dikat+%3FObjekt+.%0D%0A%7D+&format=text%2Fhtml&timeout=0&signal_void=on&signal_unconnected=on&run=+Run+Query+)
 
@@ -126,9 +103,52 @@ Als **Objekte** finden wir URIs (Objekte die dereferenzierbar und ihrerseits mit
 - Die Bundesverfassung ist vom Typ `rdf:type` `jolux:ConsolidationAbstract` (**Objekt**), der einen SR-Eintrag (Gesetz auf abstrakter Ebene) darstellt. 
 - Jeder SR-Eintrag (inikl. Bundesverfassung) ist über das **Prädikat** `classifiedByTaxonomyEntry` als Eintrag im  [Vokabular](https://fedlex.data.admin.ch/vocabularies/de/) (Begriffsverzeichnis) der Bundeskanzlei zugeordnet. (Ein Vokabular ist eine Sammlung von Fachbegriffen und Konzepten denen eine eindeutige Bedeutung und Identität vergeben wurde.) Im Vokabular von Fedlex ist der "TaxonomyEntry" die zuverlässigste Quelle zum Abfragen der SR-Nummer eines SR-Eintrags.
 
-### Pandas Dataframe
+## Python setup
 
-In Python kann man die URIs mit `display_result(df)` in einem Pandas Dataframe als Tabelle mit klickbaren Links aufrufen. Die Query ist in `/sparql.py` definiert:
+Wir installieren das Modul `pandas`:
+```
+pip install pandas
+```
+
+Nach der Python Installation muss das `pandas` Modul importiert werden. Zudem werden Funktionen aus dem Modul `sparql.py` importiert. Das File muss sich im Projektordner befinden.
+
+```
+import pandas as pd
+from sparql import query, display_result
+
+async def main():
+    df = await query("""
+
+    SELECT DISTINCT ?Prädikat ?Objekt WHERE {
+        
+        <https://fedlex.data.admin.ch/eli/cc/1999/404> ?Prädikat ?Objekt .
+    } 
+
+    """, "fedlex_sparqlendpoint")
+
+    display_result(df)
+
+# Call the async function
+await main()
+```
+[Documentation](https://pandas.pydata.org/docs/index.html)
+
+### main.py
+Wir erstellen ein `main.py` File. Mit dem folgenden Code können wir die obige Query aufrufen. Zum Vergleich: Im Web-Interface benötigen wir nur den sogenannten `query_string` zwischen den `"""`:
+
+```
+df = await query("""
+
+SELECT DISTINCT ?Prädikat ?Objekt WHERE {
+    
+    <https://fedlex.data.admin.ch/eli/cc/1999/404> ?Prädikat ?Objekt .
+} 
+
+""", "fedlex_sparqlendpoint")
+
+display_result(df)
+```
+In Python kann man die URIs mit `display_result(df)` in einem Pandas Dataframe als Tabelle mit klickbaren Links aufrufen. Die Query-Struktur ist in `/sparql.py` definiert:
 
 ```
 import json
@@ -191,6 +211,9 @@ def display_result(df):
     display(df)
 ```
 
+
+
+
 #### Im Web-Interace
 1. `async def query(query_string, store = "linkeddata", set_na = False):` ist ein asynchroner Fetch-Request (asynchronous fetch POST request) zu `adress`. Das Ergebnis body and headers. Die Daten kommen aus dem Fedlex Triple Store (`triple_store`=`fedlex_sparqlendpoint`).
 
@@ -204,8 +227,8 @@ curl -X POST \
   --data-urlencode 'query=SELECT DISTINCT ?predicate ?object WHERE { <https://fedlex.data.admin.ch/eli/cc/1999/404> ?predicate ?object . }'
 ```
 
-#### In lokaler Python-Umgebung
-2. Das JSON aus dem Pandas Dataframe wird mit Hilfe von HTML gerendert (Python library source code?):
+#### Lokale Python-Umgebung
+2. Das JSON aus dem Pandas Dataframe lässt sich mit Hilfe von HTML rendern (Python library source code?):
 
 ```
 df = HTML(df.to_html(render_links=True, escape=False))
@@ -232,20 +255,31 @@ Install the Requests library and create a Pipfile for you in your project’s di
 
 `pip install requests`
 
-##### Initialize and publish to GitHub repository
+##### [Initialize and publish](https://www.yopa.page/blog/2023-08-31-initializing-a-python-project-in-visual-studio-code.html) to GitHub repository
 
 Log in to your GitHub account and create a new repository Then: 
 - Initialize Git:
 `git init`
-- Add and Commit Files:
+- **Add and Commit Files:
 `git add .`
-`git commit -m "Initial commit"`
+`git commit -m "Initial commit"`**
 -  Then link Local Repository to GitHub (`YOUR_REPO_URL`):
 `git remote add origin YOUR_REPO_URL`
-- Push to main:
-`git push -u origin main`
+- **Push to main:
+`git push -u origin main`**
 
-The files should appear in the created repo.
+The files should appear in the created repo. After that use only the commands in **bold**.
+
+If you don't want files to appear on GitHub use a .gitignore file. If sensitive data has already been pushed [use the following command to delete from Github](https://docs.github.com/de/get-started/getting-started-with-git/ignoring-files#configuring-ignored-files-for-a-single-repository):
+
+`git rm --cached -r  MY_FILE_OR_DIRECTORY`
+
+
+
+
+
+
+
 
 
 #### Sprachversionen
