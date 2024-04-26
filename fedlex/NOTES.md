@@ -3,11 +3,11 @@
 [## Fedlex Linked Data Tutorial](https://swissfederalarchives.github.io/LD-Tutorials/lab/)
 
 
-
 ## Fedlex URIs
 
-### Vokabular
-Die URIs von Fedlex richten sich nach dem europäischen ELI-Standard (European Legislation Identifier) zur Bezwichnung von Rechtstexten. The [European Legislation Identifier (ELI)](https://eur-lex.europa.eu/eli-register/about.html) is a system to make legislation available online in a standardised format, so that it can be accessed, exchanged and reused across borders.
+### URIs und Vokabular
+
+[Fedlex Vokabular](https://fedlex.data.admin.ch/de-CH/home/convention) (URIs Templates for Legal Resources in Switzerland)
 
 Die [URIs von Fedlex](https://fedlex.data.admin.ch/de-CH/home/convention) werden nach einer `Convention` beschrieben: "Switzerland publishes several collections of legal resources available in German, French and Italian and in some cases translated to Romanish or English. Most of the information published are documents, but some are just information about a legislative event, such as the starting date of a consultation published in the Federal gazette, or information about consultation events. 
 
@@ -25,6 +25,11 @@ Alle URIs beginnen mit https://fedlex.data.admin.ch/eli/:
 
 [Mehr zur Publikation von "legal resources" in der Schweiz](https://www.fedlex.admin.ch/eli/cc/2004/745/de)
 
+Die URIs von Fedlex richten sich nach dem europäischen ELI-Standard (European Legislation Identifier) zur Bezwichnung von Rechtstexten. The [European Legislation Identifier (ELI)](https://eur-lex.europa.eu/eli-register/about.html) is a system to make legislation available online in a standardised format, so that it can be accessed, exchanged and reused across borders.
+
+[Datenmodell JOLux](https://fedlex.data.admin.ch/de-CH/home/models)
+
+Das von Fedlex verwendete Datenmodell heisst **JOLux**. Es basiert auf dem [FRBR-Standard](https://de.wikipedia.org/wiki/Functional_Requirements_for_Bibliographic_Records) (Functional Requirements for Bibliographic Records), einem Entity-Relationship-Modell zur Beschreibung bibliographischer Daten, das für die Beschreibung von Rechtstexten adaptiert wurde. Ursprünglich aus Luxemburg stammend wird es inzwischen von der Schweiz und Luxemburg gemeinsam weiterentwickelt.
 
 Wichtige Namespaces:
 * `fedlex`: [Namespace für AS und SR Einträge](https://fedlex.data.admin.ch/eli/)
@@ -32,21 +37,8 @@ Wichtige Namespaces:
 * `skos` : [SKOS Vokabular](http://www.w3.org/2004/02/skos/core#)
 * `rdf` : [RDF Vokabular](http://www.w3.org/1999/02/22-rdf-syntax-ns#)
 
-
-### Metadaten-Explorer
-Die URI bzw. die URL der Bundesverfassung `https://fedlex.data.admin.ch/eli/cc/1999/404` verweist auf den Gesetzestext. Im [Metadaten-Explorer](https://fedlex.data.admin.ch/de-CH/metadata) kann man die damit verknüpften Linked Data Triples durchsuchen. Eine Abfrage der Linked Data Triples der Bundesverfassung über den Metadaten-Explorers weist stets folgende URL auf:
-- die Sprache als path `/de-CH` 
-- der Gesetzestext als Parameter: `/metadata?value=`
-
-Die zusammengesetzte URL: https://fedlex.data.admin.ch/de-CH/metadata?value=https://fedlex.data.admin.ch/eli/cc/1999/404
-
-### Datenmodell JoLux
-
-[Datenmodell JOLux](https://fedlex.data.admin.ch/de-CH/home/models)
-
-Das von Fedlex verwendete Datenmodell heisst **JOLux**. Es basiert auf dem [FRBR-Standard](https://de.wikipedia.org/wiki/Functional_Requirements_for_Bibliographic_Records) (Functional Requirements for Bibliographic Records), einem Entity-Relationship-Modell zur Beschreibung bibliographischer Daten, das für die Beschreibung von Rechtstexten adaptiert wurde. Ursprünglich aus Luxemburg stammend wird es inzwischen von der Schweiz und Luxemburg gemeinsam weiterentwickelt.
-
 #### Amtliche Sammlung
+
 In der **Amtlichen Sammlung (AS)** (Englisch: Official Compilation (OC)) des Bundesrechts werden die neuen und geänderten Erlasse, Verträge und Beschlüsse chronologisch veröffentlicht. 
 
 Typischerweise haben Beschlüsse die Form eines Mantelerlasses, in denen sowohl neue Gesetze erlassen werden, als auch schon bestehende geändert oder aufgehoben werden können. 
@@ -67,6 +59,16 @@ Eine SR-Nummer ist innerhalb des geltenden Rechts eindeutig. In Fällen in denen
 
 Weitere Erläuterungen zur systematischen Rechtssammlung sind [hier](https://www.fedlex.admin.ch/de/cc/explanations-cc) zu finden.
 
+### Metadaten-Explorer
+
+Die URI bzw. die URL der Bundesverfassung `https://fedlex.data.admin.ch/eli/cc/1999/404` verweist auf den Gesetzestext. Im [Metadaten-Explorer](https://fedlex.data.admin.ch/de-CH/metadata) kann man die damit verknüpften Linked Data Triples durchsuchen. 
+
+Eine Abfrage der Linked Data Triples der Bundesverfassung über den Metadaten-Explorers weist stets folgende URL auf:
+- die Sprache als path `/de-CH` 
+- der Gesetzestext als Parameter: `/metadata?value=`
+
+Die zusammengesetzte URL: https://fedlex.data.admin.ch/de-CH/metadata?value=https://fedlex.data.admin.ch/eli/cc/1999/404
+
 ### Fedlex SPAQL API
 
 Die API von Fedlex ist auch über einen SPARQL Endpoint verfügbar:
@@ -79,7 +81,7 @@ Mehr Informationen zu SPARQL:
 - [SPARQL-Tutorial 1](https://jena.apache.org/tutorials/sparql.html) 
 - [SPARQL Tutorial 2](https://www.wikidata.org/wiki/Wikidata:SPARQL_tutorial) from Wikidata
 
-Eine SPARQL Abfrage ist nichts anderes als ein POST-Request an den entsprechenden Triple Store Datenbank Server. Wir benutzen dazu das Web-Interface und Python:
+Eine SPARQL Abfrage ist nichts anderes als ein POST-Request an den entsprechenden Triple Store Datenbank Server. Wir benutzen dazu das Web-Interface:
 
 [**Web-Interface**](https://fedlex.data.admin.ch/sparqlendpoint)
 
@@ -110,119 +112,14 @@ Das Ergebnis ist eine Tabelle mit allen Prädikaten und den entsprechenden Objek
 [**Hier Klicken für Darstellung**](https://fedlex.data.admin.ch/sparqlendpoint?default-graph-uri=&query=SELECT+DISTINCT+%3FPr%C3%A4dikat+%3FObjekt+WHERE+%7B%0D%0A++++%0D%0A++++%3Chttps%3A%2F%2Ffedlex.data.admin.ch%2Feli%2Fcc%2F1999%2F404%3E+%3FPr%C3%A4dikat+%3FObjekt+.%0D%0A%7D+&format=text%2Fhtml&timeout=0&signal_void=on&signal_unconnected=on&run=+Run+Query+)
 
 Als **Objekte** finden wir URIs (Objekte die dereferenzierbar und ihrerseits mit Prädikaten beschrieben sind) und **Literals** (Strings die eine bestimmte Information (z.B. Datum) transportieren). Beispielsweise sieht man hier:
-- Die Bundesverfassung ist vom Typ `rdf:type` `jolux:ConsolidationAbstract` (**Objekt**), der einen SR-Eintrag (Gesetz auf abstrakter Ebene) darstellt. 
-- Jeder SR-Eintrag (inikl. Bundesverfassung) ist über das **Prädikat** `classifiedByTaxonomyEntry` als Eintrag im  [Vokabular](https://fedlex.data.admin.ch/vocabularies/de/) (Begriffsverzeichnis) der Bundeskanzlei zugeordnet. (Ein Vokabular ist eine Sammlung von Fachbegriffen und Konzepten denen eine eindeutige Bedeutung und Identität vergeben wurde.) Im Vokabular von Fedlex ist der "TaxonomyEntry" die zuverlässigste Quelle zum Abfragen der SR-Nummer eines SR-Eintrags.
-
-
-### Python
-Wir erstellen ein `main.py` File. Mit dem folgenden Code können wir die obige Query aufrufen. Zum Vergleich: Im Web-Interface benötigen wir nur den sogenannten `query_string` zwischen den `"""`:
-
-```
-df = await query("""
-
-SELECT DISTINCT ?Prädikat ?Objekt WHERE {
-    
-    <https://fedlex.data.admin.ch/eli/cc/1999/404> ?Prädikat ?Objekt .
-} 
-
-""", "fedlex_sparqlendpoint")
-
-display_result(df)
-```
-In Python kann man die URIs mit `display_result(df)` in einem Pandas Dataframe als Tabelle mit klickbaren Links aufrufen. Die Query-Struktur ist in `/sparql.py` definiert:
-
-```
-import json
-import pandas as pd
-from pyodide.ffi import to_js
-from IPython.display import JSON, HTML
-from js import Object, fetch
-from io import StringIO
-
-# 1
-async def query(query_string, store = "fedlex_sparqlendpoint", set_na = False):
-
-    if store == "fedlex_sparqlendpoint":
-        address = 'https://fedlex.data.admin.ch/sparqlendpoint'
-    elif store == "geo_linkeddata":
-        address = 'https://geo.ld.admin.ch/query'
-    elif store == "linkeddata":
-        address = 'https://ld.admin.ch/query'
-    else:
-        address = store
-    
-    try:
-        resp = await fetch(address,
-          method="POST",
-          body="query=" + query_string.replace("+", "%2B").replace("&", "%26"),
-          credentials="same-origin",
-          headers=Object.fromEntries(to_js({"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8", 
-                                            "Accept": "text/csv" })),
-        )
-    except:
-        raise RuntimeError("fetch failed")
-    
-    
-    if resp.ok:
-        res = await resp.text()
-        
-        # ld.admin.ch throws errors starting with '{"message":'
-        if '{"message":' in res:
-            error = json.loads(res)
-            raise RuntimeError("SPARQL query malformed: " + error["message"])
-
-        # geo.ld.admin.ch throws errors starting with 'Parse error:'
-        elif 'Parse error:' in res:
-            raise RuntimeError("SPARQL query malformed: " + res)
-            
-        else:
-            # if everything works out, create a pandas dataframe from the csv result
-            df = pd.read_csv(StringIO(res), na_filter = set_na)
-            return df
-    else:
-        # fedlex.data.admin.ch throws error with response status 400
-        if resp.status == 400:
-            raise RuntimeError("Response status 400: Possible malformed SPARQL query. No syntactic advice available.")
-        else:
-            raise RuntimeError("Response status " + str(resp.status))
-            
-# 2
-def display_result(df):
-    df = HTML(df.to_html(render_links=True, escape=False))
-    display(df)
-```
-
-
-#### Im Web-Interace
-1. `async def query(query_string, store = "linkeddata", set_na = False):` ist ein asynchroner Fetch-Request (asynchronous fetch POST request) zu `adress`. Das Ergebnis body and headers. Die Daten kommen aus dem Fedlex Triple Store (`triple_store`=`F`).
-
-In case of error: If the fetch request works outside of your Python environment, then the issue might be specific to your Python setup or environment. You can try accessing the endpoint directly from your browser or using a tool like cURL to see if it responds (using authentication if necessary. fetch request may be blocked due to CORS restrictions. Check if the server allows requests from your origin):
-
-```
-curl -X POST \
-  https://fedlex.data.admin.ch/sparqlendpoint \
-  -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
-  -H 'Accept: text/csv' \
-  --data-urlencode 'query=SELECT DISTINCT ?predicate ?object WHERE { <https://fedlex.data.admin.ch/eli/cc/1999/404> ?predicate ?object . }'
-```
-
-#### Lokale Python-Umgebung
-2. Das JSON aus dem Pandas Dataframe lässt sich mit Hilfe von HTML rendern (Python library source code?):
-
-```
-df = HTML(df.to_html(render_links=True, escape=False))
-    display(df)
-```
-
-Wenn Python auf der lokalen Maschine installiert ist, lässt sich die Tabelle auch lokal anzeigen. Dazu muss man einen neuen Projektordner anlegen und das File /sparql.py dort abspeichern.
-
-#### Sprachversionen
+- In der Spalte **Objekt**: Die Bundesverfassung ist vom Typ `rdf:type` `jolux:ConsolidationAbstract`, der einen SR-Eintrag (Gesetz auf abstrakter Ebene) darstellt. 
+- Das **Prädikat** `classifiedByTaxonomyEntry` im  [Vokabular](https://fedlex.data.admin.ch/vocabularies/de/) (Begriffsverzeichnis) der Bundeskanzlei beschreibt der SR-Eintrag. Es ist die zuverlässigste Quelle zum Abfragen der SR-Nummer eines SR-Eintrags, denn jeder SR-Eintrag (inikl. Bundesverfassung) hat 
 
 Innerhalb eines `jolux:ConsolidationAbstract` existieren verschiedene Sprachversionen. Diese sind vom `rdf:type` `jolux:Expression` und sind durch die Eigenschaft `jolux:isRealizedBy` mit dem sprachübergreifenden Eintrag des `jolux:ConsolidationAbstract` verknüpft.
 
 Mit einem Klick auf die URI der deutschen Sprachversion https://fedlex.data.admin.ch/eli/cc/1999/404/de sehen wir, dass wir hier sowohl den Titel als auch die Abkürzung auf deutsch finden. Diese URI beschreibt nicht den deutschen Text der eigentlichen Bundesverfassung sondern repräsentiert nur die "Kopfdaten" der Bundesverfassung, also Titel und Abkürzung. 
 
-Der eigentliche Inhalt ist über die [Consolidations](#Consolidations:-Versionen-der-SR-Einträge) angebunden.
+Der eigentliche Inhalt ist über die "Consolidations-Versionen-der-SR-Einträge" angebunden.
 
 #### Abfrage von SR-Nummer, Titel und Abkürzung der Bundesverfassung
 

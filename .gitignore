@@ -1,5 +1,7 @@
 myenv/
 HOWTOGIT.md
+fedlex/ARCHIVE.md
+fedlex/sparql.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
