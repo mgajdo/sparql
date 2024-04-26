@@ -1,5 +1,5 @@
 
-[Zurück zu SPARQL Einführung](README.md)
+[Zurück zu SPARQL Einführung](/README.md)
 
 [Zurück zu Fedlex Einführung](fedlex/README.md)
 
