@@ -1,4 +1,5 @@
 # SPARQL queries to Fedlex data
+Adapted from [## Fedlex Linked Data Tutorial](https://swissfederalarchives.github.io/LD-Tutorials/lab/). Following the [instructions](https://github.com/mgajdo/sparql?tab=readme-ov-file#instructions) below will return a table in HTML.
 
 ## Instructions
 1. Insert your SPARQL query inside `sparql_query.txt`.
