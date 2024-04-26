@@ -1,19 +1,10 @@
+# Fedlex Tutorial
 
-[Zurück zu SPARQL](/README.md)
+Das folgende Beispiel wurde übernommen aus: [Fedlex Linked Data Tutorial](https://swissfederalarchives.github.io/LD-Tutorials/lab/)
 
-[Zurück zu Fedlex](fedlex/README.md)
+Siehe auch [SPARQL Playground](https://fedlex.data.admin.ch/de-CH/sparql) von Casemates mit mehr Beispielen für **Fedlex**. Mehr Tutorials zu Linked Data aus der Schweiz: auch hier: https://zazuko.com/get-started/.
 
-# Cookbook
-
-Beispiele übernommen aus: [Fedlex Linked Data Tutorial](https://swissfederalarchives.github.io/LD-Tutorials/lab/)
-
-https://zazuko.com/get-started/sparql-query/
-
-## Fedlex Tutorial
-
-### URIs und Vokabular
-
-[## Fedlex Linked Data Tutorial](https://swissfederalarchives.github.io/LD-Tutorials/lab/)
+## URIs und Vokabular
 
 [Fedlex Vokabular](https://fedlex.data.admin.ch/de-CH/home/convention) (URIs Templates for Legal Resources in Switzerland)
 
@@ -45,7 +36,7 @@ Wichtige Namespaces:
 * `skos` : [SKOS Vokabular](http://www.w3.org/2004/02/skos/core#)
 * `rdf` : [RDF Vokabular](http://www.w3.org/1999/02/22-rdf-syntax-ns#)
 
-### Metadaten-Explorer
+## Metadaten-Explorer
 
 Die URI bzw. die URL der Bundesverfassung `https://fedlex.data.admin.ch/eli/cc/1999/404` verweist auf den Gesetzestext. Im [Metadaten-Explorer](https://fedlex.data.admin.ch/de-CH/metadata) kann man die damit verknüpften Linked Data Triples durchsuchen. 
 
@@ -55,7 +46,7 @@ Eine Abfrage der Linked Data Triples der Bundesverfassung über den Metadaten-Ex
 
 Die zusammengesetzte URL: https://fedlex.data.admin.ch/de-CH/metadata?value=https://fedlex.data.admin.ch/eli/cc/1999/404
 
-### Fedlex SPAQL API
+## Fedlex SPARQL API
 
 Die API von Fedlex ist auch über einen SPARQL Endpoint verfügbar:
 - [API Endpoint](https://fedlex.data.admin.ch/sparqlendpoint)
@@ -63,14 +54,11 @@ Die API von Fedlex ist auch über einen SPARQL Endpoint verfügbar:
 
 Die Website https://fedlex.admin.ch und alle dort angzeigten Daten sind in Form von **Linked Data**, d.h. Triples im Datenformat RDF (Resource Description Framework) in einem Triple Store gespeichert und mit Hilfe des SPARQL Endpoints  maschinenlesbar. Im Gegensatz zu relationalen Datenbanken werden die Daten in Triple Stores als  **Triples** (daher mit Tabellen nicht visualisierbar) gespeichert. 
 
-Mehr Informationen zu SPARQL:
-- [SPARQL-Tutorial 1](https://jena.apache.org/tutorials/sparql.html) 
-- [SPARQL Tutorial 2](https://www.wikidata.org/wiki/Wikidata:SPARQL_tutorial) from Wikidata
-
 Eine SPARQL Abfrage ist nichts anderes als ein POST-Request an den entsprechenden Triple Store Datenbank Server. Wir benutzen dazu das Web-Interface:
 
 [**Web-Interface**](https://fedlex.data.admin.ch/sparqlendpoint)
 
+## SPARQL Patterns
 SPARQL Queries folgen einem grundlegenden Aufbau, der immer gleich lautet:
 
 ```
@@ -80,7 +68,9 @@ SELECT * WHERE
 }
 ```
 
-Triples folgen der grammatikalischen Struktur **Subjekt -> Prädikat -> Objekt**.  Einzelne Positionen der Triples können bewusst undefiniert gelassen und mit der Variable `?`bezeichnet werden.
+Triples folgen der grammatikalischen Struktur **Subjekt -> Prädikat -> Objekt**.  Einzelne Positionen der Triples können bewusst undefiniert gelassen und mit der Variable `?`bezeichnet werden. Mehr Informationen zu SPARQL:
+- [SPARQL-Tutorial 1](https://jena.apache.org/tutorials/sparql.html) 
+- [SPARQL Tutorial 2](https://www.wikidata.org/wiki/Wikidata:SPARQL_tutorial) from Wikidata
 
 Das Ziel unserer ersten Query in der Bundesverfassung ist es Triples suchen, in denen die Bundesverfassung als **Subjekt** erscheint. Alle Triples müssen dieses Muster erfüllen:
 
@@ -91,20 +81,21 @@ SELECT DISTINCT ?Prädikat ?Objekt WHERE {
 } 
 ```
 
-Die eingefügte URL führt zum Gesetzestext der Bundesverfassung in der Systematischen Rechtssammlung. (Der Path `/cc` führt zur Classified Compilation):
+In SPARQL ist die `URI der Bundesverfassung` das **Subjekt** der SPARQL-Abfrage. Wir setzen das `Prädikat` und `Objekt` als Variablen ein (`?`). `SELECT` beschreibt welche Variablen zurückgegeben werden sollen und mit `DISTINCT` werden doppelte Ergebnisse aussortiert. Die Aussage endet mit einem Punkt und die Abfrage gibt alle Elemente zurück, die das definierte Pattern erfüllen. 
 
-https://fedlex.data.admin.ch/eli/cc/1999/404
+Eine ausführliche Anleitung zum Pattern Matching ist [hier](https://programminghistorian.org/en/lessons/retired/graph-databases-and-SPARQL#rdf-in-brief) zu finden. 
 
-Die URI der deutschen Sprachversion https://fedlex.data.admin.ch/eli/cc/1999/404/de führt uns zu den Metadaten der Bundesverfassung. Wir sehen sowohl den Titel als auch die Abkürzung auf Deutsch. 
+## Casemates 
 
-https://fedlex.data.admin.ch/eli/cc/1999/404/de 
+Die eingefügte URL (`https://fedlex.data.admin.ch/eli/cc/1999/404`) führt zum Gesetzestext der Bundesverfassung in der Systematischen Rechtssammlung. (Der Path `/cc` steht für Classified Compilation). 
 
-Diese URI beschreibt nicht den deutschen Text der eigentlichen Bundesverfassung sondern repräsentiert nur die "Kopfdaten" der Bundesverfassung, also Titel und Abkürzung auf Deutsch. Der eigentliche Inhalt der Gesetzestexte ist über die "Consolidations-Versionen" der SR Einträge angebunden im Datenmodell von JoLux existieren Innerhalb eines `jolux:ConsolidationAbstract` verschiedene Sprachversionen. Diese sind vom `rdf:type` `jolux:Expression` und sind durch die Eigenschaft `jolux:isRealizedBy` mit dem sprachübergreifenden Eintrag des `jolux:ConsolidationAbstract` verknüpft. 
+Die URI der deutschen Sprachversion `https://fedlex.data.admin.ch/eli/cc/1999/404/de` kann auch im Browser geöffnet werden (bereitgestellt von Casemates). Dort sehen wirsowohl den Titel als auch die Abkürzung auf Deutsch. 
 
-In SPARQL ist die `URI der Bundesverfassung` das **Subjekt** der SPARQL-Abfrage. Wir setzen das `Prädikat` und `Objekt` als Variablen ein (`?`). `SELECT` beschreibt welche Variablen zurückgegeben werden sollen und mit `DISTINCT` werden doppelte Ergebnisse aussortiert. Die Aussage endet mit einem Punkt und die Abfrage gibt alle Elemente zurück, die das definierte Pattern erfüllen. Eine ausführliche Anleitung zum Pattern Matching ist [hier](https://programminghistorian.org/en/lessons/retired/graph-databases-and-SPARQL#rdf-in-brief) zu finden. 
+Diese URI beschreibt nicht den deutschen Text der eigentlichen Bundesverfassung sondern repräsentiert nur die "Kopfdaten" der Bundesverfassung, also Titel und Abkürzung auf Deutsch. 
 
-Das Ergebnis ist eine Tabelle mit allen Prädikaten und den entsprechenden Objekten (unsere Variabeln), die in allen abgespeicherten Triples mit der Bundesverfassung als Subjekt vorkommen. Als **Objekte** finden wir URIs (Objekte die dereferenzierbar und ihrerseits mit Prädikaten beschrieben sind) und **Literals** (Strings die eine bestimmte Information (z.B. Datum) transportieren).
+Der eigentliche Inhalt der Gesetzestexte ist über die "Consolidations-Versionen" der SR Einträge angebunden im Datenmodell von JoLux existieren Innerhalb eines `jolux:ConsolidationAbstract` verschiedene Sprachversionen. Diese sind vom `rdf:type` `jolux:Expression` und sind durch die Eigenschaft `jolux:isRealizedBy` mit dem sprachübergreifenden Eintrag des `jolux:ConsolidationAbstract` verknüpft. 
 
-Bemerkungen:
-Die Bundesverfassung ist vom Typ `rdf:type` `jolux:ConsolidationAbstract` (**Objekt**), der einen SR-Eintrag (Gesetz auf abstrakter Ebene) darstellt. 
-Das **Prädikat** `classifiedByTaxonomyEntry` im  [Vokabular](https://fedlex.data.admin.ch/vocabularies/de/) (Begriffsverzeichnis) der Bundeskanzlei beschreibt der SR-Eintrag. Es ist die zuverlässigste Quelle zum Abfragen der SR-Nummer eines SR-Eintrags.
+Weitere Bemerkungen:
+- Das Ergebnis ist eine Tabelle mit allen Prädikaten und den entsprechenden Objekten (unsere Variabeln), die in allen abgespeicherten Triples mit der Bundesverfassung als Subjekt vorkommen. Als **Objekte** finden wir URIs (Objekte die dereferenzierbar und ihrerseits mit Prädikaten beschrieben sind) und **Literals** (Strings die eine bestimmte Information (z.B. Datum) transportieren).
+- Die Bundesverfassung ist vom Typ `rdf:type` `jolux:ConsolidationAbstract` (**Objekt**), der einen SR-Eintrag (Gesetz auf abstrakter Ebene) darstellt. 
+- Das **Prädikat** `classifiedByTaxonomyEntry` im  [Vokabular](https://fedlex.data.admin.ch/vocabularies/de/) (Begriffsverzeichnis) der Bundeskanzlei beschreibt der SR-Eintrag. Es ist die zuverlässigste Quelle zum Abfragen der SR-Nummer eines SR-Eintrags.
