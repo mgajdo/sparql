@@ -6,27 +6,41 @@
 
 ## Fedlex URIs
 
+### Vokabular
+Die URIs von Fedlex richten sich nach dem europäischen ELI-Standard (European Legislation Identifier) zur Bezwichnung von Rechtstexten. The [European Legislation Identifier (ELI)](https://eur-lex.europa.eu/eli-register/about.html) is a system to make legislation available online in a standardised format, so that it can be accessed, exchanged and reused across borders.
+
+Die [URIs von Fedlex](https://fedlex.data.admin.ch/de-CH/home/convention) werden nach einer `Convention` beschrieben: "Switzerland publishes several collections of legal resources available in German, French and Italian and in some cases translated to Romanish or English. Most of the information published are documents, but some are just information about a legislative event, such as the starting date of a consultation published in the Federal gazette, or information about consultation events. 
+
+The various publications are: 
+- **Federal Gazette (BBl - Bundesblatt)** - publication of announcements and messages
+- **Official Compilation (AS - Amtliche Sammlung)** - publication of the law
+- **Classified Compilation (SR -Systematische Sammlung)** - publication of the consolidated version of the law
+- **Consultation procedures (Vernehmlassungen)** - publication of information about coming, present and future consultation
+- **Register of sectoral agreements with the European Union** - publication of European texts, which are applicable to Switzerland because of sectoral agreements with the EU
+- **Treaty** - publication of additional data on all agreements governed by international law that are in force for Switzerland or that Switzerland has signed, as well as information about major legally binding agreements and non-binding texts"
+
 Alle URIs beginnen mit https://fedlex.data.admin.ch/eli/:
 - Die Einträge für die AS beginnen mit https://fedlex.data.admin.ch/eli/oc/ 
 - Die Einträge für die SR beginnen mit https://fedlex.data.admin.ch/eli/cc/
 
-Die URI bzw. die URL der [Bundesverfassung](https://fedlex.data.admin.ch/eli/cc/1999/404) beinhaltet neben dem Inhalt (d.h. dem Gesetzestext) Linked Data Triples, wie man im [Metadaten-Explorer](https://fedlex.data.admin.ch/de-CH/metadata) sehen kann.
+[Mehr zur Publikation von "legal resources" in der Schweiz](https://www.fedlex.admin.ch/eli/cc/2004/745/de)
 
-Eine programmatische Abfrage der Metadaten-Explorers lässt sich mit der folgenden Struktur erreichen:
-- Grund-URL: https://fedlex.data.admin.ch/de-CH/metadata
-- Query: ?value=https://fedlex.data.admin.ch/eli/cc/1999/404
-- **Grund-URL + Query**: https://fedlex.data.admin.ch/de-CH/metadata?value=https://fedlex.data.admin.ch/eli/cc/1999/404
 
-Die URIs von Fedlex richten sich nach dem europäischen ELI-Standard (European Legislation Identifier) zur Bezwichnung von RechtstextenMehr zum Aufbau der URIs auf Fedlex:
-* [Mehr zum Aufbau der URIs auf Fedlex](https://fedlex.data.admin.ch/de-CH/home/convention)
+Wichtige Namespaces:
 * `fedlex`: [Namespace für AS und SR Einträge](https://fedlex.data.admin.ch/eli/)
-
-Andere nützliche Namespaces:
 * `jolux` : [Vokabular für das JOLux Datenmodell](http://data.legilux.public.lu/resource/ontology/jolux#)
 * `skos` : [SKOS Vokabular](http://www.w3.org/2004/02/skos/core#)
 * `rdf` : [RDF Vokabular](http://www.w3.org/1999/02/22-rdf-syntax-ns#)
 
-### Datenmodell
+
+### Metadaten-Explorer
+Die URI bzw. die URL der Bundesverfassung `https://fedlex.data.admin.ch/eli/cc/1999/404` verweist auf den Gesetzestext. Im [Metadaten-Explorer](https://fedlex.data.admin.ch/de-CH/metadata) kann man die damit verknüpften Linked Data Triples durchsuchen. Eine Abfrage der Linked Data Triples der Bundesverfassung über den Metadaten-Explorers weist stets folgende URL auf:
+- die Sprache als path `/de-CH` 
+- der Gesetzestext als Parameter: `/metadata?value=`
+
+Die zusammengesetzte URL: https://fedlex.data.admin.ch/de-CH/metadata?value=https://fedlex.data.admin.ch/eli/cc/1999/404
+
+### Datenmodell JoLux
 
 [Datenmodell JOLux](https://fedlex.data.admin.ch/de-CH/home/models)
 
@@ -65,9 +79,6 @@ Mehr Informationen zu SPARQL:
 - [SPARQL-Tutorial 1](https://jena.apache.org/tutorials/sparql.html) 
 - [SPARQL Tutorial 2](https://www.wikidata.org/wiki/Wikidata:SPARQL_tutorial) from Wikidata
 
-
-### SPARQL Query
-
 Eine SPARQL Abfrage ist nichts anderes als ein POST-Request an den entsprechenden Triple Store Datenbank Server. Wir benutzen dazu das Web-Interface und Python:
 
 [**Web-Interface**](https://fedlex.data.admin.ch/sparqlendpoint)
@@ -94,7 +105,6 @@ SELECT DISTINCT ?Prädikat ?Objekt WHERE {
 
 Die Aussage beginnt mit der `URI der Bundesverfassung` als Subjekt. Wir setzen das `Prädikat` und `Objekt` als Variablen ein (`?`). `SELECT` beschreibt welche Variablen zurückgegeben werden sollen. Mit `DISTINCT` werden doppelte Ergebnisse aussortiert. Die Aussage endet mit einem Punkt und die Abfrage gibt alle Elemente zurück, die das definierte Pattern erfüllen. Eine ausführliche Anleitung zum Pattern Matching ist [hier](https://programminghistorian.org/en/lessons/retired/graph-databases-and-SPARQL#rdf-in-brief) zu finden. 
 
-
 Das Ergebnis ist eine Tabelle mit allen Prädikaten und den entsprechenden Objekten (unsere Variabeln), die in allen abgespeicherten Triples mit der Bundesverfassung als Subjekt vorkommen:
 
 [**Hier Klicken für Darstellung**](https://fedlex.data.admin.ch/sparqlendpoint?default-graph-uri=&query=SELECT+DISTINCT+%3FPr%C3%A4dikat+%3FObjekt+WHERE+%7B%0D%0A++++%0D%0A++++%3Chttps%3A%2F%2Ffedlex.data.admin.ch%2Feli%2Fcc%2F1999%2F404%3E+%3FPr%C3%A4dikat+%3FObjekt+.%0D%0A%7D+&format=text%2Fhtml&timeout=0&signal_void=on&signal_unconnected=on&run=+Run+Query+)
@@ -103,37 +113,8 @@ Als **Objekte** finden wir URIs (Objekte die dereferenzierbar und ihrerseits mit
 - Die Bundesverfassung ist vom Typ `rdf:type` `jolux:ConsolidationAbstract` (**Objekt**), der einen SR-Eintrag (Gesetz auf abstrakter Ebene) darstellt. 
 - Jeder SR-Eintrag (inikl. Bundesverfassung) ist über das **Prädikat** `classifiedByTaxonomyEntry` als Eintrag im  [Vokabular](https://fedlex.data.admin.ch/vocabularies/de/) (Begriffsverzeichnis) der Bundeskanzlei zugeordnet. (Ein Vokabular ist eine Sammlung von Fachbegriffen und Konzepten denen eine eindeutige Bedeutung und Identität vergeben wurde.) Im Vokabular von Fedlex ist der "TaxonomyEntry" die zuverlässigste Quelle zum Abfragen der SR-Nummer eines SR-Eintrags.
 
-## Python setup
 
-Wir installieren das Modul `pandas`:
-```
-pip install pandas
-```
-
-Nach der Python Installation muss das `pandas` Modul importiert werden. Zudem werden Funktionen aus dem Modul `sparql.py` importiert. Das File muss sich im Projektordner befinden.
-
-```
-import pandas as pd
-from sparql import query, display_result
-
-async def main():
-    df = await query("""
-
-    SELECT DISTINCT ?Prädikat ?Objekt WHERE {
-        
-        <https://fedlex.data.admin.ch/eli/cc/1999/404> ?Prädikat ?Objekt .
-    } 
-
-    """, "fedlex_sparqlendpoint")
-
-    display_result(df)
-
-# Call the async function
-await main()
-```
-[Documentation](https://pandas.pydata.org/docs/index.html)
-
-### main.py
+### Python
 Wir erstellen ein `main.py` File. Mit dem folgenden Code können wir die obige Query aufrufen. Zum Vergleich: Im Web-Interface benötigen wir nur den sogenannten `query_string` zwischen den `"""`:
 
 ```
@@ -212,10 +193,8 @@ def display_result(df):
 ```
 
 
-
-
 #### Im Web-Interace
-1. `async def query(query_string, store = "linkeddata", set_na = False):` ist ein asynchroner Fetch-Request (asynchronous fetch POST request) zu `adress`. Das Ergebnis body and headers. Die Daten kommen aus dem Fedlex Triple Store (`triple_store`=`fedlex_sparqlendpoint`).
+1. `async def query(query_string, store = "linkeddata", set_na = False):` ist ein asynchroner Fetch-Request (asynchronous fetch POST request) zu `adress`. Das Ergebnis body and headers. Die Daten kommen aus dem Fedlex Triple Store (`triple_store`=`F`).
 
 In case of error: If the fetch request works outside of your Python environment, then the issue might be specific to your Python setup or environment. You can try accessing the endpoint directly from your browser or using a tool like cURL to see if it responds (using authentication if necessary. fetch request may be blocked due to CORS restrictions. Check if the server allows requests from your origin):
 
@@ -236,51 +215,6 @@ df = HTML(df.to_html(render_links=True, escape=False))
 ```
 
 Wenn Python auf der lokalen Maschine installiert ist, lässt sich die Tabelle auch lokal anzeigen. Dazu muss man einen neuen Projektordner anlegen und das File /sparql.py dort abspeichern.
-
-Danach Python und Pip installieren:
-
-`python3 -m pip install --upgrade pip`
-
-[Installationsnleitung](https://packaging.python.org/en/latest/tutorials/managing-dependencies/) für Python Projekt.
-
-Initialize a Virtual Environment:
-
-`python -m venv myenv`
-
-Activate environment:
-
-`source myenv/bin/activate`
-
-Install the Requests library and create a Pipfile for you in your project’s directory. The Pipfile is used to track which dependencies your project needs in case you need to re-install them, such as when you share your project with others:
-
-`pip install requests`
-
-##### [Initialize and publish](https://www.yopa.page/blog/2023-08-31-initializing-a-python-project-in-visual-studio-code.html) to GitHub repository
-
-Log in to your GitHub account and create a new repository Then: 
-- Initialize Git:
-`git init`
-- **Add and Commit Files:
-`git add .`
-`git commit -m "Initial commit"`**
--  Then link Local Repository to GitHub (`YOUR_REPO_URL`):
-`git remote add origin YOUR_REPO_URL`
-- **Push to main:
-`git push -u origin main`**
-
-The files should appear in the created repo. After that use only the commands in **bold**.
-
-If you don't want files to appear on GitHub use a .gitignore file. If sensitive data has already been pushed [use the following command to delete from Github](https://docs.github.com/de/get-started/getting-started-with-git/ignoring-files#configuring-ignored-files-for-a-single-repository):
-
-`git rm --cached -r  MY_FILE_OR_DIRECTORY`
-
-
-
-
-
-
-
-
 
 #### Sprachversionen
 

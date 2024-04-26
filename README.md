@@ -9,3 +9,12 @@
 `query.py` contains the logic
 
 `display_result.py` renders the code as HTML
+
+## Python setup
+- Create new directory
+- Clone repo to local directory `git clone https://github.com/mgajdo/spraql.git`
+- cd into repo `cd ` to new directory
+- Install Python and pip (install dependencies if the project is cloned) `python3 -m pip install --upgrade pip`. [Installation advice](https://packaging.python.org/en/latest/tutorials/managing-dependencies/) for Python projects.
+- Initialize a Virtual Environment: `python -m venv myenv`. The dependencies will be installed in the /myenv directory
+- Activate environment: `source myenv/bin/activate`
+- Install the Requests and Pandas library `pip install requests pandas`. [Documentation](https://pandas.pydata.org/docs/index.html)
