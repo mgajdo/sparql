@@ -2,6 +2,8 @@
 [Zurück zu SPARQL Einführung](README.md)
 [Zurück zu Fedlex Einführung](fedlex/README.md)
 
+Übernommen aus: [Fedlex Linked Data Tutorial](https://swissfederalarchives.github.io/LD-Tutorials/lab/)
+
 #### Abfrage von SR-Nummer, Titel und Abkürzung der Bundesverfassung
 
 Ausgehend von der URI der Bundesverfassung sowie dem Wissen über TaxonomyEntries und Expressions können wir nun die Information über SR-Nummer, Titel und Abkürzung der Bundesverfassung abfragen.
