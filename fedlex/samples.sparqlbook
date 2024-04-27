@@ -2,19 +2,19 @@
   {
     "kind": 1,
     "language": "markdown",
-    "value": "# SPARQL Query samples to Fedlex\n\n## Sparql Notebook Einführung\n\nIn VS Code, install Sparql Notebook.\n\nDocumentation: https://marketplace.visualstudio.com/items?itemName=Zazuko.sparql-notebook\n\nConnect to a remote server by clicking the + button in the SPARQL Connections panel in the VS Code extension. Fill in the server URL and optional credentials.\n\nFedlex Endpoint: https://fedlex.data.admin.ch/sparqlendpoint\n\nThis connection is used throughout the entire notebook, except when a cell defines its own endpoint.\n\n## Bundesverfassung\nsiehe TUtorial.",
+    "value": "# SPARQL Query samples to Fedlex\n\n## Sparql Notebook Einführung\n\nIn VS Code, install Sparql Notebook.\n\nDocumentation: https://marketplace.visualstudio.com/items?itemName=Zazuko.sparql-notebook\n\nConnect to a remote server by clicking the + button in the SPARQL Connections panel in the VS Code extension. Fill in the server URL and optional credentials.\n\nFedlex Endpoint: https://fedlex.data.admin.ch/sparqlendpoint\n\nThis connection is used throughout the entire notebook, except when a cell defines its own endpoint.\n\n## Bundesverfassung\nsiehe Tutorial.",
     "metadata": {}
   },
   {
     "kind": 2,
     "language": "sparql",
-    "value": "SELECT DISTINCT ?Prädikat ?Objekt WHERE {\n    <https://fedlex.data.admin.ch/eli/cc/1999/404> ?Prädikat ?Objekt .\n}\n",
+    "value": "SELECT DISTINCT ?Prädikat ?Objekt WHERE {\n    <https://fedlex.data.admin.ch/eli/cc/1999/404> ?Prädikat ?Objekt .\n}",
     "metadata": {}
   },
   {
     "kind": 1,
     "language": "markdown",
-    "value": "# Abfrage von SR-Nummer, Titel und Abkürzung der Bundesverfassung\n\nAusgehend von der URI der Bundesverfassung sowie dem Wissen über TaxonomyEntries und Expressions können wir nun die Information über SR-Nummer, Titel und Abkürzung der Bundesverfassung abfragen.",
+    "value": "# Abfrage von SR-Nummer, Titel und Abkürzung der Bundesverfassung\n\nAusgehend von der URI der Bundesverfassung sowie dem Wissen über TaxonomyEntries und Expressions können wir nun die Information über SR-Nummer, Titel und Abkürzung der Bundesverfassung abfragen.\n\n0. Definition der Prefixes zur besseren Lesbarkeit\n1. Die erste Aussage wählt den TaxonomyEntry der Bundesverfassung aus.\n2. Vom TaxonomyEntry bekommen wir die SR-Nummer\n3. Als nächstes wählen wir alle Expressions (Sprachversionen) aus die durch jolux:isRealizedBy mit der Bundesverfassung verknüpft sind.\n4. Dann grenzen wir die Expressions auf diejenige mit der Sprache Deutsch ein.\n5. Die nächsten Aussagen fragen die gewünschen Daten ab, jeweils mit der Expression als Subjekt (möglich durch das Beenden der Aussage mit ; anstatt .)",
     "metadata": {}
   },
   {
@@ -26,25 +26,13 @@
   {
     "kind": 1,
     "language": "markdown",
-    "value": "Erklärung:\n0. Definition der Prefixes zur besseren Lesbarkeit\n1. Die erste Aussage wählt den TaxonomyEntry der Bundesverfassung aus.\n2. Vom TaxonomyEntry bekommen wir die SR-Nummer\n3. Als nächstes wählen wir alle Expressions (Sprachversionen) aus die durch jolux:isRealizedBy mit der Bundesverfassung verknüpft sind.\n4. Dann grenzen wir die Expressions auf diejenige mit der Sprache Deutsch ein.\n5. Die nächsten Aussagen fragen die gewünschen Daten ab, jeweils mit der Expression als Subjekt (möglich durch das Beenden der Aussage mit ; anstatt .)",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "\n## Liste aller SR-Einträge\n\nBasierend auf dem was wir bereits gelernt haben können wir nun ganz einfach eine Liste aller SR-Einträge und die dazugehörigen Metadaten abfragen, indem wir die URI der Bundesverfassung durch eine Variable ersetzen die vom rdf:type jolux:ConsolidationAbstract sein soll (also einen SR Eintrag darstellt):",
+    "value": "\n## Liste aller SR-Einträge\n\nBasierend auf dem was wir bereits gelernt haben können wir nun ganz einfach eine Liste aller SR-Einträge und die dazugehörigen Metadaten abfragen, indem wir die URI der Bundesverfassung durch eine Variable ersetzen die vom rdf:type jolux:ConsolidationAbstract sein soll (also einen SR Eintrag darstellt):\n\n1. Alle Objekte vom Typ ConsolidationAbstract auswählen\n2. Alle TaxonomyEntries und Expressions der SR-Einträge auswählen\n3. Wir beschränken die Ausgabe auf die ersten 10 Einträge",
     "metadata": {}
   },
   {
     "kind": 2,
     "language": "sparql",
     "value": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX jolux: <http://data.legilux.public.lu/resource/ontology/jolux#>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n\nSELECT DISTINCT ?SR_Nummer ?Titel ?Abkürzung ?SR_URI WHERE {\n    \n    # 1\n    ?SR_URI rdf:type jolux:ConsolidationAbstract .\n    \n    # 2\n    ?SR_URI jolux:classifiedByTaxonomyEntry ?TaxonomyEntry ;\n            jolux:isRealizedBy ?Expression .\n    \n    ?TaxonomyEntry skos:notation ?SR_Nummer .\n    \n    ?Expression jolux:language <http://publications.europa.eu/resource/authority/language/DEU> .\n    \n    ?Expression jolux:title ?Titel ;\n                jolux:titleShort ?Abkürzung .\n} \n\n# 3\nLIMIT 10",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "\nErklärung:\n1. Alle Objekte vom Typ ConsolidationAbstract auswählen\n2. Alle TaxonomyEntries und Expressions der SR-Einträge auswählen\n3. Wir beschränken die Ausgabe auf die ersten 10 Einträge\n\n",
     "metadata": {}
   },
   {

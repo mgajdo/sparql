@@ -2,7 +2,7 @@
 
 ## Tutorial
 
-Das Tutorial funktioniert ohne Installation. Für Testingzwecke wird jedoch die Sparql Notebook Extension empfohlen (siehe )
+Das Tutorial funktioniert ohne Installation. Für Testingzwecke wird jedoch die Sparql Notebook Extension empfohlen (siehe)[TUTORIAL.md]
 
 ## Eigene Samples
 
